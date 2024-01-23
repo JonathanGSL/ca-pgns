@@ -1,2 +1,7 @@
 PGN ID (decimal),PGN ID (hex),Label,Name,PGN Length,Rate,SPNs
-0,0x0,TSC1,Torque/Speed Control 1,8,To engine: Control Purpose dependent or 10 ms\nTo retarder: 50 ms,([],)
+0,0,TSC1,Torque/Speed Control 1,8,To engine: Control Purpose dependent or 10 ms To retarder: 50 ms,695 696 897 898 518 3349 3350 4191 4206 4207
+512,200,EBS11,Electronic Brake System #1/1,,,695 696 897 898 518 3349 3350 4191 4206 4207
+768,300,EBS21,Electronic Brake System #2/1,,,695 696 897 898 518 3349 3350 4191 4206 4207
+1792,700,GPV4,General Purpose Valve Pressure,8,100 ms,4086 4087 4088 4089
+2048,800,AUXIO5,Auxiliary Input/Output Status 5,8,Manufacturer defined not faster than 20 ms,4155 4156 4157 4158
+3328,d00,TC2,Transmission Control 2,8,50 ms,6569 6570

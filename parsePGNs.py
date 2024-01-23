@@ -29,8 +29,8 @@ class PGN():
 		self.name: str = '',
 		self.pgn_length: int = 0,
 		self.rate: str = '',
-		self.spns: [int] = [],
-		self.spn_start_bits: [int] = []
+		self.spns: int = [],
+		self.spn_start_bits: int = []
 	
 	def __repr__(self):
 		obj = {
@@ -175,7 +175,8 @@ with open('PGNs_from_JSON_file_MINI.json', encoding = 'utf-8') as infile:
 					this_pgn.pgn_id_decimal = int(get_first_string(row))
 					print(f'\tjust saved pgn_id_decimal: {this_pgn.pgn_id_decimal}')
 					# and hex flavour:
-					this_pgn.pgn_id_hex = str(hex(this_pgn.pgn_id_decimal))
+					hex_value = str(hex(this_pgn.pgn_id_decimal))
+					this_pgn.pgn_id_hex = hex_value[2:]
 					print(f'\tjust saved pgn_id_hex: ->{this_pgn.pgn_id_hex}<-')
 					# pgn detail next:
 					next_layer_name = layer_pgn_details
@@ -203,9 +204,14 @@ with open('PGNs_from_JSON_file_MINI.json', encoding = 'utf-8') as infile:
 					elif field_name == pgn_length:
 						this_pgn.pgn_length = get_second_string(row)
 					elif field_name == rate:
-						rate = get_second_string(row)
-						# strip commas:
-						this_pgn.rate = rate.replace(',', '')
+						rate_value = get_second_string(row)
+						if rate_value:
+							# strip:
+							rate2 = rate_value.replace(',', '')
+							rate3 = rate2.replace('\\n', ' ')
+							this_pgn.rate = rate3
+						else:
+							this_pgn.rate = ''
 					elif field_name == spns:
 						print('\tfield_name is spns - down one and empty spns list.')
 						# This is the start of the list of SPNs.
@@ -243,6 +249,7 @@ with open('PGNs_from_JSON_file_MINI.json', encoding = 'utf-8') as infile:
 					# Add spn to list for this pgn:
 					spns_list.append(get_spn_value(row))
 					print(f'\tspns_list length now: {len(spns_list)}')
+					print(f'spns_list now: ->{spns_list}<-')
 			# endif layer is spn_value
 			if this_layer_name == layer_start_bits:
 				# Are we still at the spn start bits intro?
@@ -295,6 +302,7 @@ with open('PGNs_from_JSON_file_MINI.json', encoding = 'utf-8') as infile:
 				pgn_complete = False
 				# We did!
 				print(f'end of pgn {this_pgn.pgn_id_decimal}')
+				this_pgn.spns = spns_list
 				# Add the custom class to the list:
 				pgns.append(this_pgn)
 				print(f'\tpgns length now: {len(pgns)}')
@@ -329,8 +337,11 @@ for this_pgn in pgns:
 	row += this_pgn.name + ','
 	row += str(this_pgn.pgn_length) + ','
 	row += this_pgn.rate + ','
-	if len(spns):
-		row += str(this_pgn.spns)
+	if len(this_pgn.spns) > 0:
+		for spn in this_pgn.spns:
+			row += str(spn) + ' '
+		# remove last one:
+		row = row[:-1]
 	outfile.write(row + '\n')
 # Next row
 
