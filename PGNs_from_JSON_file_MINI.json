@@ -1,0 +1,146 @@
+{
+  "J1939PGNdb" : {
+    "0" : {
+      "Label" : "TSC1",
+      "Name" : "Torque/Speed Control 1",
+      "PGNLength" : "8",
+      "Rate" : "To engine: Control Purpose dependent or 10 ms\nTo retarder: 50 ms",
+      "SPNs" : [
+        695,
+        696,
+        897,
+        898,
+        518,
+        3349,
+        3350,
+        4191,
+        4206,
+        4207
+      ],
+      "SPNStartBits" : [
+        [
+          0
+        ],
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          8,
+          16
+        ],
+        [
+          24
+        ],
+        [
+          32
+        ],
+        [
+          35
+        ],
+        [
+          40
+        ],
+        [
+          56
+        ],
+        [
+          60
+        ]
+      ]
+    },
+    "512" : {
+      "Label" : "EBS11",
+      "Name" : "Electronic Brake System #1/1",
+      "PGNLength" : "",
+      "Rate" : "",
+      "SPNs" : []
+    },
+    "768" : {
+      "Label" : "EBS21",
+      "Name" : "Electronic Brake System #2/1",
+      "PGNLength" : "",
+      "Rate" : "",
+      "SPNs" : []
+    },
+    "1792" : {
+      "Label" : "GPV4",
+      "Name" : "General Purpose Valve Pressure",
+      "PGNLength" : "8",
+      "Rate" : "100 ms",
+      "SPNs" : [
+        4086,
+        4087,
+        4088,
+        4089
+      ],
+      "SPNStartBits" : [
+        [
+          0,
+          8
+        ],
+        [
+          16
+        ],
+        [
+          24,
+          32
+        ],
+        [
+          40,
+          48
+        ]
+      ]
+    },
+    "2048" : {
+      "Label" : "AUXIO5",
+      "Name" : "Auxiliary Input/Output Status 5",
+      "PGNLength" : "8",
+      "Rate" : "Manufacturer defined, not faster than 20 ms",
+      "SPNs" : [
+        4155,
+        4156,
+        4157,
+        4158
+      ],
+      "SPNStartBits" : [
+        [
+          0,
+          8
+        ],
+        [
+          16,
+          24
+        ],
+        [
+          32,
+          40
+        ],
+        [
+          48,
+          56
+        ]
+      ]
+    },
+    "3328" : {
+      "Label" : "TC2",
+      "Name" : "Transmission Control 2",
+      "PGNLength" : "8",
+      "Rate" : "50 ms",
+      "SPNs" : [
+        6569,
+        6570
+      ],
+      "SPNStartBits" : [
+        [
+          0
+        ],
+        [
+          2
+        ]
+      ]
+    }
+  }
+}
