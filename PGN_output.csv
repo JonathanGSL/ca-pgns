@@ -1,2 +1,2 @@
 PGN ID (decimal),PGN ID (hex),Label,Name,PGN Length,Rate,SPNs
-3328,0xd00,TC2,Transmission Control 2,8,50 ms,([],)
+0,0x0,TSC1,Torque/Speed Control 1,8,To engine: Control Purpose dependent or 10 ms\nTo retarder: 50 ms,([],)
