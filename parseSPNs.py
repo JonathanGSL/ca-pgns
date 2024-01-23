@@ -21,47 +21,22 @@
 
 
 
-class PGN():
+class SPN():
 	def __init__(self):
-		self.pgn_id_decimal: int = 0,
-		self.pgn_id_hex: str = '',
-		self.label: str = '',
+		self.spn_id_decimal: str = '',
+		self.spn_id_hex: str = '',
+		self.data_range: str = '',
 		self.name: str = '',
-		self.pgn_length: str = '',
-		self.rate: str = '',
-		self.spns: int = [],
-		self.spn_start_bits: int = []
+		self.offset: str = '',
+		self.operational_high: str = '',
+		self.operational_low: str = '',
+		self.operational_range: str = '',
+		self.resolution: str = '',
+		self.spn_length: str = '',
+		self.units: str = ''
 	
-	def __repr__(self):
-		obj = {
-			'pgn_id_decimal': self.pgn_id_decimal,
-			'pgn_id_hex': self.pgn_id_hex,
-			'label': self.label,
-			'name': self.name,
-			'pgn_length': self.pgn_length,
-			'rate': self.rate,
-			'spns': self.spns,
-			'spn_start_bits': self.spn_start_bits
-		}
-		obj_str = ' '.join([f'\n\t.{k} = {v}' for k, v in obj.items()])
-		return(f'{self.__class__.__name__} {obj_str}')
 # end class PGN
 
-def down():
-	global old_layer, layer, layer_names, layer_name
-	print(f'\tdown() - from {old_layer} to {layer}')
-	old_layer = layer
-	layer += 1
-	layer_name = layer_names[layer]
-# end def down()
-
-def up():
-	global old_layer, layer, layer_names, layer_name
-	print(f'\tup() - from {old_layer} to {layer}')
-	old_layer = layer
-	layer -= 1
-	layer_name = layer_names[layer]
-# end def up()
 
 def find_quote_marks(row):
 	#print(f'\tfind_quote_marks({row}) called')
@@ -99,34 +74,21 @@ def get_second_string(row):
 	else:
 		return('ERROR!')
 
-def get_spn_value(row):
-	# strip whitespace:
-	row_stripped = row.strip()
-	# if there's a comma at the end, remove it:
-	if row_stripped[-1] == ',':
-		row_stripped = row_stripped.rstrip(',')
-	print(f'\tSPN value: ->{row_stripped}<-')
-	# return value:
-	return(int(row_stripped))
-
 
 layer_void = 'void'
 layer_file = 'file'
 layer_json = 'json'
-layer_pgns = 'pgns'
-layer_pgn_details = 'pgn_details'
 layer_spns = 'spns'
-layer_spn_values = 'spn_values'
-layer_start_bits = 'start_bits'
-layer_start_bit_values = 'start_bit_values'
-layer_start_bit_item = 'start_bit_item'
-label = 'Label'
+layer_spn_details = 'spn_details'
+data_range = 'DataRange'
 name = 'Name'
-pgn_length = 'PGNLength'
-rate = 'Rate'
-spns = 'SPNs'
-spn_value = 'spn_value'
-spn_start_bits = 'SPNStartBits'
+offset = 'Offset'
+operational_high = 'OperationalHigh'
+operational_low = 'OperationalLow'
+operational_range = 'OperationalRange'
+resolution = 'Resolution'
+spn_length = 'SPNLength'
+units = 'Units'
 
 previous_layer_name = layer_void
 this_layer_name = layer_file
@@ -134,19 +96,15 @@ next_layer_name = layer_void
 
 ocb = '{'
 ccb = '}'
-osb = '['
-csb = ']'
 
-this_pgn = PGN()
-pgns = []
-spns_list = []
-spn_start_bits_list = []
-pgn_complete = False
+this_spn = SPN()
+spns = []
+spn_complete = False
 
 row_counter = 0
 
 
-with open('PGNs_from_JSON_file.json', encoding = 'utf-8') as infile:
+with open('SPNs_from_JSON_file.json', encoding = 'utf-8') as infile:
 	# Get row:
 	for row in infile:
 		row_counter += 1 #NB coderunner line numbers start at 1 <sigh!>
@@ -162,57 +120,57 @@ with open('PGNs_from_JSON_file.json', encoding = 'utf-8') as infile:
 				# endif ocb in row
 			# endif layer_file
 			if this_layer_name == layer_json:
-				# Move to pgns after this row:
-				next_layer_name = layer_pgns
+				# Move to spns after this row:
+				next_layer_name = layer_spns
 			# endif layer_json
-			if this_layer_name == layer_pgns:
+			if this_layer_name == layer_spns:
 				# check for ccb:
 				if ccb in row:
 					# yes, this is the end - json next:
 					next_layer_name = layer_json
 				else:
 					# yep - get the first string and save to pgn id dec:
-					this_pgn.pgn_id_decimal = int(get_first_string(row))
-					print(f'\tjust saved pgn_id_decimal: {this_pgn.pgn_id_decimal}')
+					this_spn.spn_id_decimal = get_first_string(row)
+					print(f'\tjust saved spn_id_decimal: {this_spn.spn_id_decimal}')
 					# and hex flavour:
-					hex_value = str(hex(this_pgn.pgn_id_decimal))
-					this_pgn.pgn_id_hex = hex_value[2:]
-					print(f'\tjust saved pgn_id_hex: ->{this_pgn.pgn_id_hex}<-')
-					# pgn detail next:
-					next_layer_name = layer_pgn_details
+					hex_value = str(hex(this_spn.spn_id_decimal))
+					this_spn.spn_id_hex = hex_value[2:]
+					print(f'\tjust saved spn_id_hex: ->{this_spn.spn_id_hex}<-')
+					# spn detail next:
+					next_layer_name = layer_spn_details
 				# endif ccb in row
-			# endif layer_pgns
-			# Or are we at the pgn detail layer?
-			if this_layer_name == layer_pgn_details:
+			# endif layer_spns
+			# Or are we at the spn detail layer?
+			if this_layer_name == layer_spn_details:
 				if '},' in row:
 					# end of pgn
-					pgn_complete = True
-					next_layer_name = layer_pgns
-				# check for empty SPN list:
-				elif '[]' in row:
-					# No layer transition needed.
-					pass
-				else:
+					spn_complete = True
+					next_layer_name = layer_spns
+				if True:
 					# Yep - check for fields and save...
 					field_name = get_first_string(row)
 					print(f'\tfield_name: ->{field_name}<-')
 					# Save as appropriate...
-					if field_name == label:
-						this_pgn.label = get_second_string(row)
+					if field_name == data_range:
+						this_spn.data_range = get_second_string(row)
 					elif field_name == name:
 						this_name = get_second_string(row)
-						this_pgn.name = this_name.replace(',', '')
-					elif field_name == pgn_length:
-						this_pgn.pgn_length = get_second_string(row)
-					elif field_name == rate:
-						rate_value = get_second_string(row)
-						if rate_value:
-							# strip:
-							rate2 = rate_value.replace(',', '')
-							rate3 = rate2.replace('\\n', ' ')
-							this_pgn.rate = rate3
-						else:
-							this_pgn.rate = ''
+						this_spn.name = this_name.replace(',', ' ')
+					elif field_name == offset:
+						this_spn.offset = get_second_string(row)
+					elif field_name == operational_high:
+						this_spn.operational_high = get_second_string(row)
+					elif field_name == operational_low:
+						this_spn.operational_low = get_second_string(row)
+					elif field_name == operational_range:
+						this_spn.operational_range = get_second_string(row)
+					elif field_name == resolution:
+						this_spn.resolution = get_second_string(row)
+						
+
+
+
+
 					elif field_name == spns:
 						print('\tfield_name is spns - down one and empty spns list.')
 						# This is the start of the list of SPNs.
@@ -336,7 +294,7 @@ for this_pgn in pgns:
 	row += str(this_pgn.pgn_id_hex) + ','
 	row += this_pgn.label + ','
 	row += this_pgn.name + ','
-	row += this_pgn.pgn_length + ','
+	row += str(this_pgn.pgn_length) + ','
 	row += this_pgn.rate + ','
 	if len(this_pgn.spns) > 0:
 		for spn in this_pgn.spns:
